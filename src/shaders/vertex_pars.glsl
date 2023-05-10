@@ -1001,9 +1001,6 @@ uniform float uRampLuminanceB;
 
 uniform float uRampPos1;
 uniform float uRampPos2;
-
-uniform float uTime;
-
 /* 
 * SMOOTH MOD
 * - authored by @charstiles -

@@ -7,10 +7,10 @@
 
     //Varyings
 
-   // v_Position = position;
-   // v_Normal = normal;
-   // v_Uv = uv;
-    //v_Displacement = pattern;
+    v_Position = position;
+    v_Normal = normal;
+    v_Uv = uv;
+    v_Displacement = pattern;
 
     //MVP
     float displacement = v_Displacement / 3.0;

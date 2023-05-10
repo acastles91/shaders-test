@@ -13,11 +13,11 @@ import vertexMain from './shaders/vertex_main.glsl'
 import fragmentPars from './shaders/fragment_pars.glsl'
 import fragmentMain from './shaders/fragment_main.glsl'
 
-import vertexShader from './shaders/cloud-vert.glsl'
-import fragmentShader from './shaders/cloud-frag.glsl'
+//import vertexShader from './shaders/cloud-vert.glsl'
+//import fragmentShader from './shaders/cloud-frag.glsl'
 
-import alternativeVertexShader from './shaders/alternative-cloud-vert.glsl'
-import alternativeFragmentShader from './shaders/alternative-cloud-frag.glsl'
+import vertexShader from './shaders/alternative-cloud-vert.glsl'
+import fragmentShader from './shaders/alternative-cloud-frag.glsl'
 
 const startApp = () => {
   console.log('Starting app...')
@@ -37,14 +37,14 @@ const startApp = () => {
 
   // lighting
 
-  //const dirLight = new THREE.DirectionalLight('#526cff', 0.6)
-  //dirLight.position.set(5, 5, 5)
+  const dirLight = new THREE.DirectionalLight('#526cff', 0.6)
+  dirLight.position.set(5, 5, 5)
 
-  //const ambientLight = new THREE.AmbientLight('#4255ff', 10)
+  const ambientLight = new THREE.AmbientLight('#4255ff', 1)
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 10);
-  //scene.add(dirLight, ambientLight)
-  scene.add(ambientLight)
+  //const ambientLight = new THREE.AmbientLight(0xffffff, 10);
+  scene.add(dirLight, ambientLight)
+  //scene.add(ambientLight)
 //scene.add(dirLight)
   // Uniforms
   const myUniforms = {
@@ -138,63 +138,63 @@ const startApp = () => {
 
   const geometry = new THREE.BoxGeometry(5, 5, 1)
 
-  const geometry2 = new THREE.IcosahedronGeometry(5, 10)
+  const geometry2 = new THREE.IcosahedronGeometry(5, 100)
   console.log(geometry.attributes)
   
-//  const material2 = new THREE.ShaderMaterial({
+//  const material = new THREE.ShaderMaterial({
 //    vertexShader: alternativeVertexShader,
 //    fragmentShader: alternativeFragmentShader,
 //  })
   
-  const material = new THREE.RawShaderMaterial({
-    glslVersion : THREE.GLSL3,
-    vertexShader: vertexShader,
-    fragmentShader: fragmentShader,
-    uniforms: { ...curvesUniforms,
-                ...myUniforms, 
-                ...uVoronoi1, 
-                ...uMixOverlay1, 
-                ...uVoronoi2, 
-                ...uMixOverlay2, 
-                ...uVoronoi3, 
-                ...uMixOverlay3, 
-                ...uGradientInnerColor, 
-                ...uGradientOuterColor, 
-                ...uColorRamp }
-  })
+//  const material = new THREE.RawShaderMaterial({
+//    glslVersion : THREE.GLSL3,
+//    vertexShader: vertexShader,
+//    fragmentShader: fragmentShader,
+//    uniforms: { ...curvesUniforms,
+//                ...myUniforms, 
+//                ...uVoronoi1, 
+//                ...uMixOverlay1, 
+//                ...uVoronoi2, 
+//                ...uMixOverlay2, 
+//                ...uVoronoi3, 
+//                ...uMixOverlay3, 
+//                ...uGradientInnerColor, 
+//                ...uGradientOuterColor, 
+//                ...uColorRamp }
+//  })
   
- //  const material3 = new THREE.MeshStandardMaterial ({
- //    onBeforeCompile: (shader) => { 
- //      shader.vertexShader = vertexShader
- //      shader.fragmentShader = fragmentShader
+   const material = new THREE.MeshStandardMaterial ({
+     onBeforeCompile: (shader) => { 
+       //shader.vertexShader = vertexShader
+       //shader.fragmentShader = fragmentShader
 
 
- //      const parsVertexString = /* glsl*/ '#include <displacementmap_pars_vertex>'
- //      shader.vertexShader = shader.vertexShader.replace(parsVertexString, 
- //        parsVertexString + vertexPars)
- //      
- //      const mainVertexString = /* glsl*/ '#include <displacementmap_vertex>'
- //      shader.vertexShader = shader.vertexShader.replace(mainVertexString,
- //        mainVertexString + vertexMain)
+       const parsVertexString = /* glsl*/ '#include <displacementmap_pars_vertex>'
+       shader.vertexShader = shader.vertexShader.replace(parsVertexString, 
+         parsVertexString + vertexPars)
+       
+       const mainVertexString = /* glsl*/ '#include <displacementmap_vertex>'
+       shader.vertexShader = shader.vertexShader.replace(mainVertexString,
+         mainVertexString + vertexMain)
 
- //      //console.log(shader.vertexShader)
+       console.log(shader.vertexShader)
 
- //      const parsFragmentString = /* glsl*/ '#include <bumpmap_pars_fragment>'
- //      shader.fragmentShader = shader.fragmentShader.replace(parsFragmentString,
- //        parsFragmentString + fragmentPars)
+       const parsFragmentString = /* glsl*/ '#include <bumpmap_pars_fragment>'
+       shader.fragmentShader = shader.fragmentShader.replace(parsFragmentString,
+         parsFragmentString + fragmentPars)
 
- //      const mainFragmentString = /* glsl*/ '#include <normal_fragment_maps>'
- //      shader.fragmentShader = shader.fragmentShader.replace(mainFragmentString,
- //        mainFragmentString + fragmentMain)
+       const mainFragmentString = /* glsl*/ '#include <normal_fragment_maps>'
+       shader.fragmentShader = shader.fragmentShader.replace(mainFragmentString,
+         mainFragmentString + fragmentMain)
 
 
- //      console.log(shader.fragmentShader)
- //      material3.userData.shader = shader
- //      
- //      shader.uniforms.uTime = { value: 0.0 }
- //    }
+       console.log(shader.fragmentShader)
+       material.userData.shader = shader
+       
+       shader.uniforms.uTime = { value: 0.0 }
+     }
  
- //})
+ })
 
  //material2.uniforms.uTime = { value: 0.0 }
 //const boxMesh = new THREE.Mesh(geometry, material)
@@ -310,22 +310,22 @@ const startApp = () => {
     //material2.uniforms.uTime.value = time
 
     
-    //material3.userData.shader.uniforms.uTime.value = time
-    //console.log(shader.vertexShader)
-    Object.assign(
-    material.uniforms,
-    curvesUniforms,
-    myUniforms,
-    uVoronoi1,
-    uMixOverlay1,
-    uVoronoi2,
-    uMixOverlay2,
-    uVoronoi3,
-    uMixOverlay3,
-    uGradientInnerColor,
-    uGradientOuterColor,
-    uColorRamp
-  );
+    material.userData.shader.uniforms.uTime.value = time
+    console.log(material.userData.shader.vertexShader)
+//    Object.assign(
+//    material.uniforms,
+//    curvesUniforms,
+//    myUniforms,
+//    uVoronoi1,
+//    uMixOverlay1,
+//    uVoronoi2,
+//    uMixOverlay2,
+//    uVoronoi3,
+//    uMixOverlay3,
+//    uGradientInnerColor,
+//    uGradientOuterColor,
+//    uColorRamp
+//  );
 
     // Update uniforms with the values from the GUI
   // material.uniforms.uCurvex1.value.copy(curvesUniforms.uCurvex1.value);
